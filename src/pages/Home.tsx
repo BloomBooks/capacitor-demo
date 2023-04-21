@@ -1,7 +1,10 @@
 import MessageListItem from "../components/MessageListItem";
 import { useState } from "react";
 import { Message, getMessages } from "../data/messages";
+import { Dialog } from "@capacitor/dialog";
+import { FilePicker } from "@capawesome/capacitor-file-picker";
 import {
+  IonButton,
   IonContent,
   IonHeader,
   IonList,
@@ -46,6 +49,29 @@ const Home: React.FC = () => {
           </IonToolbar>
         </IonHeader>
 
+        <IonButton
+          onClick={async () => {
+            const result = await FilePicker.pickFiles({
+              types: [
+                "application/octet-stream",
+                "application/zip",
+                "application/x-zip",
+                // TODO: There are other bloom-related ones that are included in BR, although they are thought to be probably unused
+              ],
+              multiple: false,
+            });
+
+            // Android: returned path=content://com.android.providers.downloads.documents/document/25190
+
+            const message =
+              result.files.length > 0
+                ? result.files.map((x) => x.path).join(", ")
+                : "No files.";
+            Dialog.alert({ message });
+          }}
+        >
+          Open File
+        </IonButton>
         <IonList>
           {messages.map((m) => (
             <MessageListItem key={m.id} message={m} />
