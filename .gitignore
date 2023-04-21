@@ -11,8 +11,6 @@
 # production
 /build
 /dist
-/android
-/electron
 
 # misc
 .DS_Store
