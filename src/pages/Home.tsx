@@ -2,6 +2,7 @@ import MessageListItem from "../components/MessageListItem";
 import { useState } from "react";
 import { Message, getMessages } from "../data/messages";
 import { Dialog } from "@capacitor/dialog";
+import { Geolocation } from "@capacitor/geolocation";
 import { FilePicker } from "@capawesome/capacitor-file-picker";
 import {
   IonButton,
@@ -35,7 +36,7 @@ const Home: React.FC = () => {
     <IonPage id="home-page">
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Inbox</IonTitle>
+          <IonTitle>Hello World</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
@@ -45,7 +46,7 @@ const Home: React.FC = () => {
 
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle size="large">Inbox</IonTitle>
+            <IonTitle size="large">Hello World</IonTitle>
           </IonToolbar>
         </IonHeader>
 
@@ -72,6 +73,26 @@ const Home: React.FC = () => {
         >
           Open File
         </IonButton>
+        <IonButton
+          onClick={async () => {
+            const coordinates = await Geolocation.getCurrentPosition();
+
+            console.log("Current position:", coordinates);
+            Dialog.alert({
+              message: `Lat: ${coordinates.coords.latitude}, Lon: ${coordinates.coords.longitude}`,
+            });
+          }}
+        >
+          Get My Location
+        </IonButton>
+        <div
+          style={{
+            padding: "4px",
+          }}
+        >
+          Random HTML Div including an <u>underlined section</u> and a{" "}
+          <span style={{ color: "green" }}>green span</span>.
+        </div>
         <IonList>
           {messages.map((m) => (
             <MessageListItem key={m.id} message={m} />
