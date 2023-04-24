@@ -12,6 +12,12 @@ A technology demonstrator that will experiment with using CapacitorJS to build c
 
 You need JDK 11 or higher to gradle build it. Download JDK's from: https://www.oracle.com/java/technologies/downloads
 
+## Other iOS Prerequisites
+
+1. You need xCode 13+ to run Capacitor
+2. To install xCode 13+, you need MacOS 13+
+3. MacBook Pros prior to 2017 are not compatible with macOS 13.
+
 # Build process
 
 ## Simple Development Cycle
