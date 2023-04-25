@@ -20,12 +20,19 @@ You need JDK 11 or higher to gradle build it. Download JDK's from: https://www.o
 
 # Build process
 
-## Simple Development Cycle
+## Simple Development Cycle (Android/iOS)
 
 1. Edit the code
 2. `yarn build` or equivalent.
 3. `npx cap sync`
-4. `npx cap run [android|ios|electron]`
+4. `npx cap run [android|ios`
+
+## Simple Development Cycle (Electron)
+
+1. Edit the code
+2. `yarn build` or equivalent.
+3. `npx cap sync @capacitor-community/electron`
+4. `npx cap open @capacitor-community/electron`
 
 ## Live Reload Cycle
 

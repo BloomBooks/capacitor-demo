@@ -14,6 +14,8 @@ import {
   IonRefresherContent,
   IonTitle,
   IonToolbar,
+  getPlatforms,
+  isPlatform,
   useIonViewWillEnter,
 } from "@ionic/react";
 import "./Home.css";
@@ -75,15 +77,36 @@ const Home: React.FC = () => {
         </IonButton>
         <IonButton
           onClick={async () => {
-            const coordinates = await Geolocation.getCurrentPosition();
+            if (isPlatform("electron")) {
+              Dialog.alert({
+                message:
+                  "Geolocation on Electron requires a Google Maps API key. Read https://github.com/electron/electron/blob/main/docs/api/environment-variables.md#google_api_key",
+              });
+            } else {
+              const coordinates = await Geolocation.getCurrentPosition();
 
-            console.log("Current position:", coordinates);
-            Dialog.alert({
-              message: `Lat: ${coordinates.coords.latitude}, Lon: ${coordinates.coords.longitude}`,
-            });
+              console.log("Current position:", coordinates);
+              Dialog.alert({
+                message: `Lat: ${coordinates.coords.latitude}, Lon: ${coordinates.coords.longitude}`,
+              });
+            }
           }}
         >
           Get My Location
+        </IonButton>
+        <IonButton
+          onClick={async () => {
+            // desktop browser -> desktop
+            // Windows electron -> capacitor, electron, desktop, hybrid
+            // Android phone -> android, cordova, capacitor, mobile, hybrid
+            const platforms = getPlatforms();
+
+            Dialog.alert({
+              message: JSON.stringify(platforms),
+            });
+          }}
+        >
+          Display Platforms
         </IonButton>
         <div
           style={{

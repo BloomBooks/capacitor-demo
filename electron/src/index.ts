@@ -39,6 +39,10 @@ const myCapacitorApp = new ElectronCapacitorApp(
   appMenuBarMenuTemplate
 );
 
+// TODO:
+// To enable Geolocation plugin, add a Google Maps API key. See https://github.com/electron/electron/blob/main/docs/api/environment-variables.md#google_api_key
+// process.env.GOOGLE_API_KEY = 'YOUR_KEY_HERE'
+
 // If deeplinking is enabled then we will set it up here.
 if (capacitorFileConfig.electron?.deepLinkingEnabled) {
   setupElectronDeepLinking(myCapacitorApp, {
