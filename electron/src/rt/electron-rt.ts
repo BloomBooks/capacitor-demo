@@ -1,12 +1,12 @@
-import { randomBytes } from 'crypto';
-import { ipcRenderer, contextBridge } from 'electron';
-import { EventEmitter } from 'events';
+import { randomBytes } from "crypto";
+import { ipcRenderer, contextBridge } from "electron";
+import { EventEmitter } from "events";
 
 ////////////////////////////////////////////////////////
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const plugins = require('./electron-plugins');
+const plugins = require("./electron-plugins");
 
-const randomId = (length = 5) => randomBytes(length).toString('hex');
+const randomId = (length = 5) => randomBytes(length).toString("hex");
 
 const contextApi: {
   [plugin: string]: { [functionName: string]: () => Promise<any> };
@@ -14,11 +14,11 @@ const contextApi: {
 
 Object.keys(plugins).forEach((pluginKey) => {
   Object.keys(plugins[pluginKey])
-    .filter((className) => className !== 'default')
+    .filter((className) => className !== "default")
     .forEach((classKey) => {
-      const functionList = Object.getOwnPropertyNames(plugins[pluginKey][classKey].prototype).filter(
-        (v) => v !== 'constructor'
-      );
+      const functionList = Object.getOwnPropertyNames(
+        plugins[pluginKey][classKey].prototype
+      ).filter((v) => v !== "constructor");
 
       if (!contextApi[classKey]) {
         contextApi[classKey] = {};
@@ -26,15 +26,20 @@ Object.keys(plugins).forEach((pluginKey) => {
 
       functionList.forEach((functionName) => {
         if (!contextApi[classKey][functionName]) {
-          contextApi[classKey][functionName] = (...args) => ipcRenderer.invoke(`${classKey}-${functionName}`, ...args);
+          contextApi[classKey][functionName] = (...args) =>
+            ipcRenderer.invoke(`${classKey}-${functionName}`, ...args);
         }
       });
 
       // Events
       if (plugins[pluginKey][classKey].prototype instanceof EventEmitter) {
-        const listeners: { [key: string]: { type: string; listener: (...args: any[]) => void } } = {};
+        const listeners: {
+          [key: string]: { type: string; listener: (...args: any[]) => void };
+        } = {};
         const listenersOfTypeExist = (type) =>
-          !!Object.values(listeners).find((listenerObj) => listenerObj.type === type);
+          !!Object.values(listeners).find(
+            (listenerObj) => listenerObj.type === type
+          );
 
         Object.assign(contextApi[classKey], {
           addListener(type: string, callback: (...args) => void) {
@@ -54,7 +59,7 @@ Object.keys(plugins).forEach((pluginKey) => {
           },
           removeListener(id: string) {
             if (!listeners[id]) {
-              throw new Error('Invalid id');
+              throw new Error("Invalid id");
             }
 
             const { type, listener } = listeners[id];
@@ -70,7 +75,10 @@ Object.keys(plugins).forEach((pluginKey) => {
           removeAllListeners(type: string) {
             Object.entries(listeners).forEach(([id, listenerObj]) => {
               if (listenerObj.type === type) {
-                ipcRenderer.removeListener(`event-${classKey}-${type}`, listenerObj.listener);
+                ipcRenderer.removeListener(
+                  `event-${classKey}-${type}`,
+                  listenerObj.listener
+                );
                 delete listeners[id];
               }
             });
@@ -82,8 +90,8 @@ Object.keys(plugins).forEach((pluginKey) => {
     });
 });
 
-contextBridge.exposeInMainWorld('CapacitorCustomPlatform', {
-  name: 'electron',
+contextBridge.exposeInMainWorld("CapacitorCustomPlatform", {
+  name: "electron",
   plugins: contextApi,
 });
 ////////////////////////////////////////////////////////
